@@ -1,2 +1,8 @@
 #!/usr/bin/env bash
-~/arduino-1.8.7/arduino --upload ~/robot-mobile/dummy.ino --port /dev/ttyACM0
+
+if [[ $# -eq 0 ]]; then
+    ~/arduino-1.8.7/arduino --upload ./dummy.ino --port /dev/ttyACM0
+else
+    ~/arduino-1.8.7/arduino --upload ./dummy.ino --port $1
+fi
+
