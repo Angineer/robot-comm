@@ -1,12 +1,16 @@
-#include "communication/Order.h"
+#include "Order.h"
 
+#include "cereal/cereal.hpp"
+#include "cereal/archives/binary.hpp"
+#include "cereal/types/map.hpp"
+#include "cereal/types/string.hpp"
 #include <sstream>
 
-Order::Order ( std::map<Snack, int> items ){
+Order::Order ( std::map<std::string, int> items ){
     this->items = items;
 }
 
-std::map<Snack, int> Order::get_order(){
+std::map<std::string, int> Order::get_order(){
     return this->items;
 }
 

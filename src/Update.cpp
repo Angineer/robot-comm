@@ -1,8 +1,11 @@
-#include "communication/Update.h"
+#include "Update.h"
 
+#include "cereal/cereal.hpp"
+#include "cereal/archives/binary.hpp"
+#include "cereal/types/string.hpp"
 #include <sstream>
 
-Update::Update(int slot_id, Snack new_type, int new_quant){
+Update::Update(int slot_id, std::string new_type, int new_quant){
     this->slot_id = slot_id;
     this->new_type = new_type;
     this->new_quant = new_quant;

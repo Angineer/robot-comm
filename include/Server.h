@@ -7,7 +7,7 @@
 #include <string>
 #include <string.h>
 
-#include "communication/Socket.h"
+#include "Socket.h"
 
 class Server: public Socket
 {

@@ -1,11 +1,11 @@
-#include "communication/Server.h"
+#include "Server.h"
 
 #include <iostream>
 #include <thread>
 #include <unistd.h>
 
-#include "communication/BluetoothSocket.h"
-#include "communication/IpSocket.h"
+#include "BluetoothSocket.h"
+#include "IpSocket.h"
 
 Server::Server ( SocketType type )
 {

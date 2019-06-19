@@ -1,4 +1,4 @@
-#include "communication/Error.h"
+#include "Error.h"
 
 ErrorCode string_to_status(std::string input){
     if(input == "battery_low") return ErrorCode::BATTERY_LOW;

@@ -4,7 +4,7 @@
 #include <netdb.h>
 #include <string>
 
-#include "communication/Socket.h"
+#include "Socket.h"
 
 // A TCP/IP socket
 class IpSocket : public Socket

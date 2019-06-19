@@ -1,4 +1,4 @@
-#include "communication/Command.h"
+#include "Command.h"
 
 Command::Command(std::string command) {
     this->command = command;

@@ -1,4 +1,4 @@
-#include "communication/BluetoothSocket.h"
+#include "BluetoothSocket.h"
 
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/rfcomm.h>

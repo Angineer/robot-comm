@@ -1,4 +1,4 @@
-#include "communication/IpSocket.h"
+#include "IpSocket.h"
 
 #include <arpa/inet.h>
 #include <cstring>

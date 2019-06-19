@@ -2,20 +2,19 @@
 #define ORDER_H
 
 #include <map>
-#include "cereal/types/map.hpp"
+#include <string>
 
-#include "communication/Message.h"
-#include "inventory/Snack.h"
+#include "Message.h"
 
 class Order: public Message
 {
     public:
-        Order ( std::map<Snack, int> items );
+        Order ( std::map<std::string, int> items );
 
-        std::map<Snack, int> get_order();
+        std::map<std::string, int> get_order();
         void write_serial();
     private:
-        std::map<Snack, int> items;
+        std::map<std::string, int> items;
 };
 
 #endif

@@ -1,12 +1,12 @@
-#include "communication/Client.h"
+#include "Client.h"
 
 #include <iostream>
 #include <netdb.h>
 #include <string.h>
 #include <unistd.h>
 
-#include "communication/BluetoothSocket.h"
-#include "communication/IpSocket.h"
+#include "BluetoothSocket.h"
+#include "IpSocket.h"
 
 Client::Client ( SocketType type, std::string connection_string ) {
     if ( type == SocketType::IP ) {

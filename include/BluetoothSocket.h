@@ -4,7 +4,7 @@
 #include <netinet/in.h>
 #include <string>
 
-#include "communication/Socket.h"
+#include "Socket.h"
 
 // A Bluetooth socket
 class BluetoothSocket : public Socket

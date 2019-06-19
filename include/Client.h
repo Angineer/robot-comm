@@ -4,8 +4,8 @@
 #include <memory>
 #include <string>
 
-#include "communication/Message.h"
-#include "communication/Socket.h"
+#include "Message.h"
+#include "Socket.h"
 
 class Client
 {

@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "communication/Message.h"
+#include "Message.h"
 
 class Command: public Message
 {
