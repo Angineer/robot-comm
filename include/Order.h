@@ -9,11 +9,14 @@
 class Order: public Message
 {
     public:
-        Order ( std::map<std::string, int> items );
+        Order ( std::string location,
+                std::map<std::string, int> items );
 
+        std::string get_location();
         std::map<std::string, int> get_order();
         void write_serial();
     private:
+        std::string location;
         std::map<std::string, int> items;
 };
 

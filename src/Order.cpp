@@ -6,12 +6,19 @@
 #include "cereal/types/string.hpp"
 #include <sstream>
 
-Order::Order ( std::map<std::string, int> items ){
-    this->items = items;
+Order::Order ( std::string location,
+			   std::map<std::string, int> items ) :
+	location ( location ),
+	items ( items )
+{
+}
+
+std::string Order::get_location(){
+    return location;
 }
 
 std::map<std::string, int> Order::get_order(){
-    return this->items;
+    return items;
 }
 
 void Order::write_serial(){
@@ -19,7 +26,8 @@ void Order::write_serial(){
     {
         cereal::BinaryOutputArchive oarchive(ss); // Create an output archive
 
-        oarchive(this->items); // Write the data to the archive
+        // Write the data to the archive
+        oarchive ( location, items );
     }
 
     serial = "o" + ss.str();

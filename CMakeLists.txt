@@ -9,6 +9,7 @@ set ( CEREAL_INCLUDE_FOLDER "../cereal/include" CACHE FILEPATH "Cereal include f
 
 # Robie library
 add_library ( robot-comm SHARED
+                           ./src/Arduino.cpp
                            ./src/BluetoothSocket.cpp
                            ./src/Client.cpp
                            ./src/Command.cpp
