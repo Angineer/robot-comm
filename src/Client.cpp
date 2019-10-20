@@ -26,11 +26,11 @@ Client::Client ( SocketType type, std::string connection_string ) {
         return;
     }
 
-    int connect_success = connect ( socket->socket_fd,
-                                    static_cast<sockaddr*> ( socket->address ),
-                                    socket->address_len );
+    connected = connect ( socket->socket_fd,
+                          static_cast<sockaddr*> ( socket->address ),
+                          socket->address_len );
 
-    if (connect_success < 0){
+    if ( connected < 0 ){
         std::cout << "ERROR connecting to server!" << std::endl;
     }
 }
@@ -43,6 +43,18 @@ std::string Client::send(Message& message){
     if ( !socket ) {
         std::cout << "Client socket not configured!" << std::endl;
         return "ERROR";
+    }
+
+    // If not connected, attempt a reconnect
+    if ( connected < 0 ) {
+        connected = connect ( socket->socket_fd,
+                              static_cast<sockaddr*> ( socket->address ),
+                              socket->address_len );
+
+        if ( connected < 0 ){
+            std::cout << "ERROR connecting to server!" << std::endl;
+            return "ERROR";
+        }
     }
 
     message.write_serial();

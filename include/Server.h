@@ -13,6 +13,7 @@ class Server: public Socket
 {
 public:
     Server ( SocketType type );
+    ~Server();
     void serve ( std::function<std::string ( std::string )> callback_func );
     void shutdown();
 

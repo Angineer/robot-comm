@@ -32,6 +32,10 @@ Server::Server ( SocketType type )
     }
 }
 
+Server::~Server() {
+    close ( socket->socket_fd );
+}
+
 void Server::child_serve(int sockfd, std::function<std::string ( std::string )> callback_func){
     int len;
 
@@ -111,8 +115,3 @@ void Server::serve ( std::function<std::string ( std::string )> callback_func ) 
         }
     }
 }
-
-void Server::shutdown() {
-    close ( socket->socket_fd );
-}
-

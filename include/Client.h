@@ -15,7 +15,11 @@ public:
     std::string send ( Message& message );
 
 private:
+    // Pointer to the actual socket
     std::unique_ptr<Socket> socket;
+
+    // Status of the socket connection
+    int connected;
 };
 
 #endif
