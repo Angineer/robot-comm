@@ -5,14 +5,25 @@
 #include <termios.h>
 #include <unistd.h>
 
-Arduino::Arduino ( std::string device ) :
+Arduino::Arduino ( const std::string& device ) :
     serial_fd ( -1 )
+{
+    // Connect with the standard timeout
+    connect ( device );
+}
+
+Arduino::~Arduino(){
+    disconnect();
+}
+
+void Arduino::connect ( const std::string& device, unsigned int timeout_ds )
 {
     serial_fd = open ( device.c_str(), O_RDWR | O_NOCTTY | O_NDELAY );
     if ( serial_fd == -1 ) {
         std::cout << "Unable to connect to Arduino" << std::endl;
     } else {
-        fcntl(serial_fd, F_SETFL, 0);
+        // Clear file status flags
+        fcntl ( serial_fd, F_SETFL, 0 );
         std::cout << "Arduino connected" << std::endl;
     }
 
@@ -26,22 +37,25 @@ Arduino::Arduino ( std::string device ) :
     cfsetispeed(&options, B9600);
     cfsetospeed(&options, B9600);
 
+    // Use "raw mode"
+    cfmakeraw ( &options );
+
     // 8N1
     options.c_cflag &= ~PARENB;
     options.c_cflag &= ~CSTOPB;
     options.c_cflag &= ~CSIZE;
     options.c_cflag |= CS8;
 
-    // Timeout of 20 sec. This is necessary because we wait for a response
-    // after a dispense to let us know the hardware is done.
-    options.c_cc[VTIME] = 200;
+    // Set read timeouts
+    options.c_cc[VTIME] = timeout_ds;
     options.c_cc[VMIN] = 0;
 
     /* set the options */
     tcsetattr(serial_fd, TCSANOW, &options);
 }
 
-Arduino::~Arduino(){
+void Arduino::disconnect()
+{
     close ( serial_fd );
 }
 
@@ -60,12 +74,11 @@ bool Arduino::sendByte ( int byte ) {
 }
 
 char Arduino::receiveByte() {
-    if ( serial_fd > 0) {
-        char byte;
+    char byte { '\0' };
+    if ( serial_fd > 0 ) {
         read ( serial_fd, &byte, 1 );
-        return byte;
     } else {
         std::cout << "Arduino disconnected!" << std::endl;
-        return '\0';
     }
+    return byte;
 }

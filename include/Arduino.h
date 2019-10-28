@@ -5,7 +5,7 @@
 
 class Arduino {
 public:
-    Arduino ( std::string device );
+    Arduino ( const std::string& device );
     ~Arduino();
 
     // Send a single byte to the Arduino over serial
@@ -18,6 +18,17 @@ public:
 private:
 	// OS file descriptor from when we open the device
     int serial_fd;
+
+    // Connect to the hardware
+    // @param timeout_ds The timeout in deciseconds for a read over the serial
+    //        port. By default, set a timeout of 20 sec. This is necessary 
+    //        because we wait for a response after a dispense to let us know
+    //        the hardware is done.
+    void connect ( const std::string& device,
+                   unsigned int timeout_ds = 200 );
+
+    // Disconnect from the hardware
+    void disconnect();
 };
 
 #endif
