@@ -16,6 +16,9 @@ public:
     char receiveByte();
 
 private:
+    // The device where the Arduino is connected (e.g. /dev/ttyACM0)
+    std::string device;
+
 	// OS file descriptor from when we open the device
     int serial_fd;
 

@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 Arduino::Arduino ( const std::string& device ) :
+    device ( device ),
     serial_fd ( -1 )
 {
     // Connect with the standard timeout
@@ -64,7 +65,8 @@ bool Arduino::sendByte ( char byte ) {
         write ( serial_fd, &byte, 1 );
         return true;
     } else {
-        std::cout << "Arduino disconnected!" << std::endl;
+        std::cout << "Arduino disconnected! Reconnecting..." << std::endl;
+        connect ( device );
         return false;
     }
 }
@@ -78,7 +80,8 @@ char Arduino::receiveByte() {
     if ( serial_fd > 0 ) {
         read ( serial_fd, &byte, 1 );
     } else {
-        std::cout << "Arduino disconnected!" << std::endl;
+        std::cout << "Arduino disconnected! Reconnecting..." << std::endl;
+        connect ( device );
     }
     return byte;
 }
