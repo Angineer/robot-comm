@@ -19,6 +19,7 @@ add_library ( robot-comm SHARED
                            ./src/Order.cpp
                            ./src/Server.cpp
                            ./src/Update.cpp )
+set_property ( TARGET robot-comm PROPERTY CXX_STANDARD 11 )
 
 install ( TARGETS robot-comm LIBRARY DESTINATION /usr/lib )
 target_include_directories ( robot-comm PUBLIC ./include 
