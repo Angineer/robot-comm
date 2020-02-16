@@ -20,8 +20,7 @@ public:
 
     int socket_fd;
     void* address;
-    size_t address_len;
-    char* buffer; // Message buffer
+    socklen_t address_len;
 };
 
 #endif

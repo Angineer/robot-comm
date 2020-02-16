@@ -22,6 +22,16 @@ Server::Server ( SocketType type )
         return;
     }
 
+    // Allow binding to the socket even if a previous instance of the server
+    // went down while a client was still connected. Otherwise, we would have to
+    // wait for the socket timeout before reconnecting.
+    int val { 1 };
+    setsockopt ( socket->socket_fd,
+                 SOL_SOCKET,
+                 SO_REUSEADDR,
+                 &val,
+                 sizeof ( val ) );
+
     int bind_success = bind ( socket->socket_fd, 
                               static_cast<sockaddr*> ( socket->address ),
                               socket->address_len );
@@ -58,8 +68,7 @@ void Server::child_serve(int sockfd, std::function<std::string ( std::string )> 
         }
         else{
             // Prep the buffer
-            buffer = new char[len];
-            memset(buffer, 0, len);
+            char buffer [len] = {};
 
             // Then read message
             n = read(sockfd, buffer, len);
@@ -87,9 +96,6 @@ void Server::child_serve(int sockfd, std::function<std::string ( std::string )> 
                 if (n < 0)
                      std::cout << "ERROR writing to socket" << std::endl;
             }
-
-            // Clean up buffer
-            delete[] buffer;
         }
     }
 }
@@ -97,11 +103,15 @@ void Server::child_serve(int sockfd, std::function<std::string ( std::string )> 
 void Server::serve ( std::function<std::string ( std::string )> callback_func ) {
     std::cout << "Listening for connections" << std::endl;
     
+    if ( listen ( socket->socket_fd, 5 ) ) {
+        std::cout << "Failed to listen on socket! " << errno << std::endl;
+        return;
+    }
+
     // Server runs forever
     while ( true ) {
-        listen ( socket->socket_fd, 5 );
         sockaddr client;
-        socklen_t client_len;
+        socklen_t client_len = socket->address_len;
         int newsockfd = accept ( socket->socket_fd,
                                  &client,
                                  &client_len );

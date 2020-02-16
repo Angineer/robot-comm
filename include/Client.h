@@ -7,8 +7,7 @@
 #include "Message.h"
 #include "Socket.h"
 
-class Client
-{
+class Client {
 public:
     Client ( SocketType type, std::string connection_string );
     ~Client ();

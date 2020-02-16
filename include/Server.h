@@ -9,7 +9,7 @@
 
 #include "Socket.h"
 
-class Server: public Socket
+class Server
 {
 public:
     Server ( SocketType type );
