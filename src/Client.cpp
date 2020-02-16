@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <netdb.h>
+#include <csignal>
 #include <string.h>
 #include <unistd.h>
 
@@ -16,6 +17,9 @@ Client::Client ( SocketType type, std::string connection_string ) :
     if ( m_Socket ) {
         m_Connected = connectSocket ( m_Socket );    
     }
+
+    // Handle broken pipes using program logic
+    signal (SIGPIPE, SIG_IGN);;
 }
 
 Client::~Client() {
@@ -40,7 +44,7 @@ std::string Client::send ( Message& message ){
     // First send the message length
     int len = content.length();
     int n = write(m_Socket->socket_fd, &len, sizeof(len));
-    if (n < 0) {
+    if (n <= 0) {
         m_Connected = 
             resetConnection ( "ERROR writing message length to socket" );
         return "ERROR";
@@ -48,34 +52,32 @@ std::string Client::send ( Message& message ){
 
     // Then send the actual message
     n = write(m_Socket->socket_fd, content.c_str(), len);
-    if (n < 0) {
+    if (n <= 0) {
         m_Connected = resetConnection ( "ERROR writing message to socket" );
         return "ERROR";
     }
 
     // Read response length
     n = read(m_Socket->socket_fd, &len, sizeof(len));
-    if (n < 0) {
+    if (n <= 0) {
         m_Connected =
             resetConnection ( "ERROR reading response length from socket" );
         return "ERROR";
-    } else if (n > 0) {
+    } else {
         // Prep the buffer
         char buffer [len] = {};
 
         // Then read message
         n = read(m_Socket->socket_fd, buffer, len);
-        if (n < 0){
+        if (n <= 0){
             m_Connected =
                 resetConnection ( "ERROR reading response from socket" );
             return "ERROR";
-        } else if (n > 0){
+        } else {
             std::string response(buffer, len);
             return response;
         }
     }
-
-    return "ERROR";
 }
 
 std::unique_ptr<Socket> Client::createSocket (
