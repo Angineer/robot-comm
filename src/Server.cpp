@@ -33,7 +33,9 @@ Server::Server ( SocketType type )
 }
 
 Server::~Server() {
-    close ( socket->socket_fd );
+    if ( socket ) {
+        close ( socket->socket_fd );
+    }
 }
 
 void Server::child_serve(int sockfd, std::function<std::string ( std::string )> callback_func){

@@ -8,51 +8,28 @@
 #include "BluetoothSocket.h"
 #include "IpSocket.h"
 
-Client::Client ( SocketType type, std::string connection_string ) {
-    if ( type == SocketType::IP ) {
-        // Parse connection string
-        size_t delim = connection_string.find ( ":" );
-        std::string host = connection_string.substr ( 0, delim );
-        std::string port = connection_string.substr ( delim + 1 );
-
-        socket.reset ( new IpSocket ( host, std::stoi ( port ) ) );
-    } else if ( type == SocketType::BLUETOOTH ) {
-        socket.reset ( new BluetoothSocket ( connection_string ) );
-    }
-
-    // If socket not configured, exit
-    if ( !socket ) {
-        std::cout << "Client socket not configured!" << std::endl;
-        return;
-    }
-
-    connected = connect ( socket->socket_fd,
-                          static_cast<sockaddr*> ( socket->address ),
-                          socket->address_len );
-
-    if ( connected < 0 ){
-        std::cout << "ERROR connecting to server!" << std::endl;
+Client::Client ( SocketType type, std::string connection_string ) :
+    m_Type ( type ),
+    m_ConnectionString ( connection_string ),
+    m_Socket ( std::move ( createSocket ( m_Type, m_ConnectionString ) ) )
+{
+    if ( m_Socket ) {
+        m_Connected = connectSocket ( m_Socket );    
     }
 }
 
 Client::~Client() {
-    close ( socket->socket_fd );
+    if ( m_Socket ) {
+        close ( m_Socket->socket_fd );
+    }
 }
 
-std::string Client::send(Message& message){
-    if ( !socket ) {
-        std::cout << "Client socket not configured!" << std::endl;
-        return "ERROR";
-    }
-
-    // If not connected, attempt a reconnect
-    if ( connected < 0 ) {
-        connected = connect ( socket->socket_fd,
-                              static_cast<sockaddr*> ( socket->address ),
-                              socket->address_len );
-
-        if ( connected < 0 ){
-            std::cout << "ERROR connecting to server!" << std::endl;
+std::string Client::send ( Message& message ){
+    if ( !m_Socket || m_Connected < 0 ) {
+        m_Connected = resetConnection ( "Client not connected!" );
+        if ( !m_Connected ) {
+            std::cout << "Client reconnected" << std::endl;
+        } else {
             return "ERROR";
         }
     }
@@ -62,30 +39,37 @@ std::string Client::send(Message& message){
 
     // First send the message length
     int len = content.length();
-    int n = write(socket->socket_fd, &len, sizeof(len));
-    if (n < 0)
-         std::cout << "ERROR writing to socket" << std::endl;
+    int n = write(m_Socket->socket_fd, &len, sizeof(len));
+    if (n < 0) {
+        m_Connected = 
+            resetConnection ( "ERROR writing message length to socket" );
+        return "ERROR";
+    }
 
     // Then send the actual message
-    n = write(socket->socket_fd, content.c_str(), len);
-    if (n < 0)
-         std::cout << "ERROR writing to socket" << std::endl;
+    n = write(m_Socket->socket_fd, content.c_str(), len);
+    if (n < 0) {
+        m_Connected = resetConnection ( "ERROR writing message to socket" );
+        return "ERROR";
+    }
 
     // Read response length
-    n = read(socket->socket_fd, &len, sizeof(len));
-    if (n < 0){
-        std::cout << "ERROR reading from socket!" << std::endl;
-    }
-    else if (n > 0){
+    n = read(m_Socket->socket_fd, &len, sizeof(len));
+    if (n < 0) {
+        m_Connected =
+            resetConnection ( "ERROR reading response length from socket" );
+        return "ERROR";
+    } else if (n > 0) {
         // Prep the buffer
         char buffer [len] = {};
 
         // Then read message
-        n = read(socket->socket_fd, buffer, len);
+        n = read(m_Socket->socket_fd, buffer, len);
         if (n < 0){
-            std::cout << "ERROR reading from socket!" << std::endl;
-        }
-        else if (n > 0){
+            m_Connected =
+                resetConnection ( "ERROR reading response from socket" );
+            return "ERROR";
+        } else if (n > 0){
             std::string response(buffer, len);
             return response;
         }
@@ -94,3 +78,47 @@ std::string Client::send(Message& message){
     return "ERROR";
 }
 
+std::unique_ptr<Socket> Client::createSocket (
+    SocketType type, const std::string& connectionString )
+{
+    std::unique_ptr<Socket> socket;
+    if ( type == SocketType::IP ) {
+        // Parse connection string
+        size_t delim = connectionString.find ( ":" );
+        std::string host = connectionString.substr ( 0, delim );
+        std::string port = connectionString.substr ( delim + 1 );
+
+        socket.reset ( new IpSocket ( host, std::stoi ( port ) ) );
+    } else if ( type == SocketType::BLUETOOTH ) {
+        socket.reset ( new BluetoothSocket ( connectionString ) );
+    }
+
+    if ( socket == nullptr ) {
+        std::cout << "Client could not configure socket" << std::endl;
+    }
+
+    return socket;
+}
+
+int Client::connectSocket ( const std::unique_ptr<Socket>& socket )
+{
+    int connected = connect ( socket->socket_fd,
+                              static_cast<sockaddr*> ( socket->address ),
+                              socket->address_len );
+
+    if ( connected < 0 ){
+        std::cout << "Client failed to connect to server" << std::endl;
+    }
+
+    return connected;
+}
+
+int Client::resetConnection ( const std::string& msg )
+{
+    std::cout << "Resetting connection (" << msg << ")" << std::endl;
+    if ( m_Socket ) {
+        close ( m_Socket->socket_fd );
+    }
+    m_Socket = std::move ( createSocket ( m_Type, m_ConnectionString ) );
+    return connectSocket ( m_Socket );
+}
