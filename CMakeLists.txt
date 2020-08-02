@@ -17,6 +17,8 @@ add_library ( robot-comm SHARED
 
               ./msgs/Command.cpp
               ./msgs/Error.cpp
+              ./msgs/Inventory.cpp
+              ./msgs/Locations.cpp
               ./msgs/Order.cpp
               ./msgs/Update.cpp )
 set_property ( TARGET robot-comm PROPERTY CXX_STANDARD 14 )
