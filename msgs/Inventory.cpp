@@ -1,4 +1,4 @@
-#include "InventoryMsg.h"
+#include "Inventory.h"
 
 #include "cereal/cereal.hpp"
 #include "cereal/archives/binary.hpp"
@@ -6,27 +6,27 @@
 #include "cereal/types/string.hpp"
 #include <sstream>
 
-const std::string InventoryMsg::type = "i";
+const std::string Inventory::type = "i";
 
-InventoryMsg::InventoryMsg()
+Inventory::Inventory()
 {
 }
 
-InventoryMsg::InventoryMsg ( const std::string& serial )
+Inventory::Inventory ( const std::string& serial )
 {
     deserialize ( serial );
 }
 
-void InventoryMsg::set_items ( const std::map<std::string, int>& items )
+void Inventory::set_items ( const std::map<std::string, int>& items )
 {
     this->items = items;
 }
 
-std::map<std::string, int> InventoryMsg::get_items(){
+std::map<std::string, int> Inventory::get_items(){
     return items;
 }
 
-std::string InventoryMsg::serialize() const
+std::string Inventory::serialize() const
 {
     std::stringstream ss;
     {
@@ -39,7 +39,7 @@ std::string InventoryMsg::serialize() const
     return type + ss.str();
 }
 
-void InventoryMsg::deserialize ( const std::string& serial )
+void Inventory::deserialize ( const std::string& serial )
 {
     // Read in new order
     std::stringstream ss ( serial.substr ( 1 ) );

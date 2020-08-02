@@ -6,11 +6,11 @@
 
 #include "Message.h"
 
-class InventoryMsg: public Message
+class Inventory: public Message
 {
     public:
-        InventoryMsg();
-        InventoryMsg ( const std::string& serial );
+        Inventory();
+        Inventory ( const std::string& serial );
 
         void set_items ( const std::map<std::string, int>& items );
         std::map<std::string, int> get_items();
