@@ -27,5 +27,5 @@ std::string Command::serialize() const {
 
 void Command::deserialize ( const std::string& serial )
 {
-    command = type + serial.substr ( 1 );
+    command = serial.substr ( 1 );
 }
