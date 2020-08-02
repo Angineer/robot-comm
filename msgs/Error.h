@@ -15,11 +15,19 @@ ErrorCode string_to_code ( std::string input );
 std::string code_to_string ( ErrorCode input );
 
 class Error: public Message {
-    private:
-        ErrorCode code;
     public:
-        Error ( ErrorCode status );
-        std::string get_serial() const override;
+        Error();
+        Error ( const std::string& serial );
+
+        void set_code ( ErrorCode code );
+        std::string get_code();
+
+        std::string serialize() const override;
+        void deserialize ( const std::string& serial ) override;
+
+    private:
+        static const std::string type;
+        ErrorCode code;
 };
 
 #endif

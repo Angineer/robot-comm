@@ -9,11 +9,16 @@
 class Locations: public Message
 {
     public:
-        Locations ( std::vector<std::string> location );
+        Locations();
+        Locations ( const std::string& serial );
 
         std::vector<std::string> get_locations();
-        std::string get_serial() const override;
+
+        std::string serialize() const override;
+        void deserialize ( const std::string& serial ) override;
+
     private:
+        static const std::string type;
         std::vector<std::string> locations;
 };
 

@@ -17,7 +17,7 @@ add_library ( robot-comm SHARED
 
               ./msgs/Command.cpp
               ./msgs/Error.cpp
-              ./msgs/Inventory.cpp
+              ./msgs/InventoryMsg.cpp
               ./msgs/Locations.cpp
               ./msgs/Order.cpp
               ./msgs/Update.cpp )

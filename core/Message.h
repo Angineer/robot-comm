@@ -5,7 +5,11 @@
 
 class Message{
     public:
-        virtual std::string get_serial() const = 0;
+        // Generate a serialized string version of the message
+        virtual std::string serialize() const = 0;
+
+        // Generate the message from a serialized string
+        virtual void deserialize ( const std::string& serial ) = 0;
 };
 
 #endif

@@ -14,10 +14,18 @@ std::string status_to_string(ErrorCode input){
     }
 }
 
-Error::Error(ErrorCode code){
-    this->code = code;
+const std::string Error::type = "e";
+
+Error::Error ( const std::string& serial )
+{
+    deserialize ( serial );
 }
 
-std::string Error::get_serial() const {
-    return "s" + std::to_string(int(code));
+std::string Error::serialize() const {
+    return type + std::to_string ( int ( code ) );
+}
+
+void Error::deserialize ( const std::string& serial )
+{
+    code = static_cast<ErrorCode> ( stoi ( serial.substr ( 1 ) ) );
 }

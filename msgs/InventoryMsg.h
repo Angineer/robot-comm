@@ -1,28 +1,25 @@
-#ifndef ORDER_H
-#define ORDER_H
+#ifndef INVENTORY_MSG_H
+#define INVENTORY_MSG_H
 
 #include <map>
 #include <string>
 
 #include "Message.h"
 
-class Order: public Message
+class InventoryMsg: public Message
 {
     public:
-        Order();
-        Order ( const std::string& serial );
+        InventoryMsg();
+        InventoryMsg ( const std::string& serial );
 
-        void set_location ( const std::string& location );
-        std::string get_location() const;
         void set_items ( const std::map<std::string, int>& items );
-        std::map<std::string, int> get_items() const;
+        std::map<std::string, int> get_items();
 
         std::string serialize() const override;
         void deserialize ( const std::string& serial ) override;
 
     private:
         static const std::string type;
-        std::string location;
         std::map<std::string, int> items;
 };
 

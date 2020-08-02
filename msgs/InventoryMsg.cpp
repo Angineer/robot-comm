@@ -1,4 +1,4 @@
-#include "Order.h"
+#include "InventoryMsg.h"
 
 #include "cereal/cereal.hpp"
 #include "cereal/archives/binary.hpp"
@@ -6,50 +6,40 @@
 #include "cereal/types/string.hpp"
 #include <sstream>
 
-const std::string Order::type = "o";
+const std::string InventoryMsg::type = "i";
 
-Order::Order()
+InventoryMsg::InventoryMsg()
 {
 }
 
-Order::Order ( const std::string& serial )
+InventoryMsg::InventoryMsg ( const std::string& serial )
 {
     deserialize ( serial );
 }
 
-void Order::set_location ( const std::string& location )
-{
-    this->location = location;
-}
-
-std::string Order::get_location() const
-{
-    return location;
-}
-
-void Order::set_items ( const std::map<std::string, int>& items )
+void InventoryMsg::set_items ( const std::map<std::string, int>& items )
 {
     this->items = items;
 }
 
-std::map<std::string, int> Order::get_items() const
-{
+std::map<std::string, int> InventoryMsg::get_items(){
     return items;
 }
 
-std::string Order::serialize() const{
+std::string InventoryMsg::serialize() const
+{
     std::stringstream ss;
     {
         cereal::BinaryOutputArchive oarchive(ss); // Create an output archive
 
         // Write the data to the archive
-        oarchive ( location, items );
+        oarchive ( items );
     }
 
     return type + ss.str();
 }
 
-void Order::deserialize ( const std::string& serial )
+void InventoryMsg::deserialize ( const std::string& serial )
 {
     // Read in new order
     std::stringstream ss ( serial.substr ( 1 ) );
@@ -57,6 +47,6 @@ void Order::deserialize ( const std::string& serial )
     {
         cereal::BinaryInputArchive iarchive(ss); // Create an input archive
 
-        iarchive ( location, items ); // Read the data from the archive
+        iarchive ( items ); // Read the data from the archive
     }
 }

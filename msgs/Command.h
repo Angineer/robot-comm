@@ -7,11 +7,20 @@
 
 class Command: public Message
 {
-    private:
-        std::string command;
     public:
-        Command ( std::string command );
-        std::string get_serial() const override;
+        Command();
+        Command ( const std::string& serial );
+
+        void set_command ( const std::string& command );
+        std::string get_command() const;
+
+        std::string serialize() const override;
+        void deserialize ( const std::string& serial ) override;
+
+    private:
+        static const std::string type;
+
+        std::string command;
 };
 
 #endif
