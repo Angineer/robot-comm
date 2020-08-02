@@ -11,7 +11,7 @@ Update::Update(int slot_id, std::string new_type, int new_quant){
     this->new_quant = new_quant;
 }
 
-void Update::write_serial(){
+std::string Update::get_serial() const {
     std::stringstream ss;
     {
         cereal::BinaryOutputArchive oarchive(ss); // Create an output archive
@@ -19,5 +19,5 @@ void Update::write_serial(){
         oarchive(slot_id, new_type, new_quant); // Write the data to the archive
     }
 
-    serial = "u" + ss.str();
+    return "u" + ss.str();
 }

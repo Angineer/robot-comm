@@ -12,7 +12,7 @@ class Update: public Message
         int new_quant;
     public:
         Update(int slot_id, std::string new_type, int new_quant);
-        void write_serial();
+        std::string get_serial() const override;
 };
 
 #endif

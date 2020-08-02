@@ -11,7 +11,7 @@ class Command: public Message
         std::string command;
     public:
         Command ( std::string command );
-        void write_serial();
+        std::string get_serial() const override;
 };
 
 #endif

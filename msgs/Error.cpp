@@ -17,7 +17,7 @@ std::string status_to_string(ErrorCode input){
 Error::Error(ErrorCode code){
     this->code = code;
 }
-void Error::write_serial(){
-    serial = "s" + std::to_string(int(code));
-}
 
+std::string Error::get_serial() const {
+    return "s" + std::to_string(int(code));
+}

@@ -21,7 +21,7 @@ std::map<std::string, int> Order::get_order(){
     return items;
 }
 
-void Order::write_serial(){
+std::string Order::get_serial() const{
     std::stringstream ss;
     {
         cereal::BinaryOutputArchive oarchive(ss); // Create an output archive
@@ -30,5 +30,5 @@ void Order::write_serial(){
         oarchive ( location, items );
     }
 
-    serial = "o" + ss.str();
+    return "o" + ss.str();
 }
