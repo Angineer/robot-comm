@@ -38,7 +38,6 @@ std::string Client::send ( Message& message ){
         }
     }
 
-    message.write_serial();
     std::string content = message.get_serial();
 
     // First send the message length

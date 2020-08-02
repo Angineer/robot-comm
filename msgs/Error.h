@@ -19,7 +19,7 @@ class Error: public Message {
         ErrorCode code;
     public:
         Error ( ErrorCode status );
-        void write_serial();
+        std::string get_serial() const override;
 };
 
 #endif

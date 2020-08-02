@@ -14,7 +14,7 @@ class Order: public Message
 
         std::string get_location();
         std::map<std::string, int> get_order();
-        void write_serial();
+        std::string get_serial() const override;
     private:
         std::string location;
         std::map<std::string, int> items;

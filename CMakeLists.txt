@@ -13,7 +13,6 @@ add_library ( robot-comm SHARED
               ./core/BluetoothSocket.cpp
               ./core/Client.cpp
               ./core/IpSocket.cpp
-              ./core/Message.cpp
               ./core/Server.cpp
 
               ./msgs/Command.cpp

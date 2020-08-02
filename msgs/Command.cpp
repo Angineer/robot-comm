@@ -3,7 +3,8 @@
 Command::Command(std::string command) {
     this->command = command;
 }
-void Command::write_serial(){
-    serial = "c" + command;
+
+std::string Command::get_serial() const {
+    return "c" + command;
 }
 

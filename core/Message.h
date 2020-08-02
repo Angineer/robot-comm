@@ -4,11 +4,8 @@
 #include <string>
 
 class Message{
-    protected:
-        std::string serial;
     public:
-        virtual void write_serial() = 0;
-        std::string get_serial() const;
+        virtual std::string get_serial() const = 0;
 };
 
 #endif
