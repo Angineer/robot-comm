@@ -2,8 +2,8 @@
 
 #include "cereal/cereal.hpp"
 #include "cereal/archives/binary.hpp"
+#include "cereal/types/map.hpp"
 #include "cereal/types/string.hpp"
-#include "cereal/types/vector.hpp"
 #include <sstream>
 
 const std::string Locations::type = "l";
@@ -17,7 +17,12 @@ Locations::Locations ( const std::string& serial )
     deserialize ( serial );
 }
 
-std::vector<std::string> Locations::get_locations(){
+void Locations::set_locations ( const std::map<int, std::string>& locations )
+{
+    this->locations = locations;
+}
+
+std::map<int, std::string> Locations::get_locations(){
     return locations;
 }
 

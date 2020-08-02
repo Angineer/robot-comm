@@ -12,8 +12,8 @@ class Order: public Message
         Order();
         Order ( const std::string& serial );
 
-        void set_location ( const std::string& location );
-        std::string get_location() const;
+        void set_location ( int location );
+        int get_location() const;
         void set_items ( const std::map<std::string, int>& items );
         std::map<std::string, int> get_items() const;
 
@@ -22,7 +22,7 @@ class Order: public Message
 
     private:
         static const std::string type;
-        std::string location;
+        int location;
         std::map<std::string, int> items;
 };
 

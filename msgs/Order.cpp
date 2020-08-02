@@ -17,12 +17,12 @@ Order::Order ( const std::string& serial )
     deserialize ( serial );
 }
 
-void Order::set_location ( const std::string& location )
+void Order::set_location ( int location )
 {
     this->location = location;
 }
 
-std::string Order::get_location() const
+int Order::get_location() const
 {
     return location;
 }
